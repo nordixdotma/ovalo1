@@ -1,0 +1,436 @@
+"use client"
+
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { ArrowLeft, Plus, Trash2, Save } from "lucide-react"
+import { clients, products } from "@/lib/mock-data"
+import { formatCurrency } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { PageAnimation } from "@/components/page-animation"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useToast } from "@/components/ui/use-toast"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { useLanguage } from "@/lib/contexts/language-context"
+import { t } from "@/lib/translations"
+
+export default function InvoiceAdd() {
+  const { language } = useLanguage()
+  const router = useRouter()
+  const { toast } = useToast()
+
+  // Calculate default due date (30 days from now)
+  const today = new Date()
+  const dueDate = new Date(today)
+  dueDate.setDate(today.getDate() + 30)
+
+  const [formData, setFormData] = useState({
+    number: `F${new Date().getFullYear()}-${String(Math.floor(Math.random() * 900) + 100).padStart(3, "0")}`,
+    date: today.toISOString().split("T")[0],
+    dueDate: dueDate.toISOString().split("T")[0],
+    clientId: "",
+    clientName: "",
+    items: [],
+    status: "draft",
+    totalHT: 0,
+    totalTTC: 0,
+    paidAmount: 0,
+  })
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleClientChange = (clientId) => {
+    const selectedClient = clients.find((c) => c.id === clientId)
+    if (selectedClient) {
+      setFormData((prev) => ({
+        ...prev,
+        clientId,
+        clientName: selectedClient.name,
+      }))
+    }
+  }
+
+  const handleStatusChange = (value) => {
+    setFormData((prev) => ({ ...prev, status: value }))
+  }
+
+  const handleAddItem = () => {
+    const newItem = {
+      id: `item-${Date.now()}`,
+      productId: "",
+      productName: "",
+      quantity: 1,
+      unitPrice: 0,
+      totalHT: 0,
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      items: [...prev.items, newItem],
+    }))
+  }
+
+  const handleItemChange = (index, field, value) => {
+    const updatedItems = [...formData.items]
+
+    if (field === "productId" && value) {
+      // Find the selected product
+      const selectedProduct = products.find((p) => p.id === value)
+      if (selectedProduct) {
+        updatedItems[index] = {
+          ...updatedItems[index],
+          productId: value,
+          productName: selectedProduct.name,
+          unitPrice: selectedProduct.price,
+          totalHT: selectedProduct.price * updatedItems[index].quantity,
+        }
+      }
+    } else if (field === "quantity") {
+      const qty = Number.parseFloat(value) || 0
+      updatedItems[index] = {
+        ...updatedItems[index],
+        quantity: qty,
+        totalHT: qty * updatedItems[index].unitPrice,
+      }
+    } else if (field === "unitPrice") {
+      const price = Number.parseFloat(value) || 0
+      updatedItems[index] = {
+        ...updatedItems[index],
+        unitPrice: price,
+        totalHT: price * updatedItems[index].quantity,
+      }
+    } else {
+      updatedItems[index] = {
+        ...updatedItems[index],
+        [field]: value,
+      }
+    }
+
+    // Calculate totals
+    const totalHT = updatedItems.reduce((sum, item) => sum + item.totalHT, 0)
+    const totalTTC = totalHT * 1.2 // 20% VAT
+
+    setFormData((prev) => ({
+      ...prev,
+      items: updatedItems,
+      totalHT,
+      totalTTC,
+    }))
+  }
+
+  const handlePaidAmountChange = (e) => {
+    const paidAmount = Number.parseFloat(e.target.value) || 0
+
+    // Update status based on paid amount
+    let newStatus = formData.status
+    if (paidAmount <= 0) {
+      newStatus = "sent"
+    } else if (paidAmount >= formData.totalTTC) {
+      newStatus = "paid"
+    } else if (paidAmount > 0 && paidAmount < formData.totalTTC) {
+      newStatus = "partial"
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      paidAmount,
+      status: newStatus,
+    }))
+  }
+
+  const handleRemoveItem = (index) => {
+    const updatedItems = formData.items.filter((_, i) => i !== index)
+
+    // Calculate totals
+    const totalHT = updatedItems.reduce((sum, item) => sum + item.totalHT, 0)
+    const totalTTC = totalHT * 1.2 // 20% VAT
+
+    setFormData((prev) => ({
+      ...prev,
+      items: updatedItems,
+      totalHT,
+      totalTTC,
+    }))
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    // Validate form
+    if (!formData.clientId) {
+      toast({
+        title: t("invoices", "validation_error", language),
+        description: t("invoices", "select_client", language),
+        variant: "destructive",
+      })
+      return
+    }
+
+    if (formData.items.length === 0) {
+      toast({
+        title: t("invoices", "validation_error", language),
+        description: t("invoices", "add_at_least_one_item", language),
+        variant: "destructive",
+      })
+      return
+    }
+
+    // Simulate saving the data
+    setTimeout(() => {
+      toast({
+        title: t("invoices", "invoice_created", language),
+        description: t("invoices", "invoice_created_desc", language, { number: formData.number }),
+        duration: 5000,
+      })
+      router.push("/invoices")
+    }, 1000)
+  }
+
+  return (
+    <PageAnimation>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm border mb-6">
+          <div className="flex items-center space-x-3">
+            <Button variant="outline" size="icon" onClick={() => router.push("/invoices")} className="h-9 w-9">
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <h2 className="text-2xl font-bold tracking-tight">{t("invoices", "create_invoice", language)}</h2>
+          </div>
+          <div className="flex space-x-2">
+            <Button type="button" variant="outline" onClick={() => router.push("/invoices")} className="gap-1">
+              {t("invoices", "cancel", language)}
+            </Button>
+            <Button type="submit" className="bg-[#9c2d40] hover:bg-[#8a2838] gap-1">
+              <Save className="h-4 w-4" />
+              {t("invoices", "save", language)}
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Card className="border border-gray-200 shadow-sm hover:shadow transition-shadow duration-200">
+            <CardHeader className="bg-gradient-to-r from-[#9c2d40]/10 to-transparent">
+              <CardTitle className="text-[#9c2d40] text-lg font-medium">
+                {t("invoices", "invoice_info", language)}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="number" className="font-medium">
+                    {t("invoices", "invoice_number", language)}
+                  </Label>
+                  <Input
+                    id="number"
+                    name="number"
+                    value={formData.number}
+                    onChange={handleInputChange}
+                    required
+                    className="border-gray-300 focus-visible:ring-[#9c2d40]/30"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="date" className="font-medium">
+                    {t("invoices", "date", language)}
+                  </Label>
+                  <Input
+                    id="date"
+                    name="date"
+                    type="date"
+                    value={formData.date}
+                    onChange={handleInputChange}
+                    required
+                    className="border-gray-300 focus-visible:ring-[#9c2d40]/30"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="dueDate" className="font-medium">
+                    {t("invoices", "due_date", language)}
+                  </Label>
+                  <Input
+                    id="dueDate"
+                    name="dueDate"
+                    type="date"
+                    value={formData.dueDate}
+                    onChange={handleInputChange}
+                    className="border-gray-300 focus-visible:ring-[#9c2d40]/30"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="clientId" className="font-medium">
+                    {t("invoices", "client", language)}
+                  </Label>
+                  <Select value={formData.clientId} onValueChange={handleClientChange}>
+                    <SelectTrigger id="clientId" className="border-gray-300 focus-visible:ring-[#9c2d40]/30">
+                      <SelectValue placeholder={t("invoices", "select_client", language)} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {clients.map((client) => (
+                        <SelectItem key={client.id} value={client.id}>
+                          {client.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="status" className="font-medium">
+                    {t("invoices", "status", language)}
+                  </Label>
+                  <Select value={formData.status} onValueChange={handleStatusChange}>
+                    <SelectTrigger id="status" className="border-gray-300 focus-visible:ring-[#9c2d40]/30">
+                      <SelectValue placeholder={t("invoices", "select_status", language)} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="draft">{t("invoices", "status_draft", language)}</SelectItem>
+                      <SelectItem value="sent">{t("invoices", "status_sent", language)}</SelectItem>
+                      <SelectItem value="paid">{t("invoices", "status_paid", language)}</SelectItem>
+                      <SelectItem value="partial">{t("invoices", "status_partial", language)}</SelectItem>
+                      <SelectItem value="overdue">{t("invoices", "status_overdue", language)}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="md:col-span-2 border border-gray-200 shadow-sm hover:shadow transition-shadow duration-200">
+            <CardHeader className="flex flex-row items-center justify-between bg-gradient-to-r from-[#9c2d40]/10 to-transparent">
+              <CardTitle className="text-xl text-[#9c2d40] font-medium">{t("invoices", "payment", language)}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label className="font-medium">{t("invoices", "total_ht", language)}</Label>
+                  <div className="text-2xl font-bold">{formatCurrency(formData.totalHT)}</div>
+                </div>
+                <div className="space-y-2">
+                  <Label className="font-medium">{t("invoices", "total_ttc", language)}</Label>
+                  <div className="text-2xl font-bold text-[#9c2d40]">{formatCurrency(formData.totalTTC)}</div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="paidAmount" className="font-medium">
+                    {t("invoices", "paid_amount", language)}
+                  </Label>
+                  <Input
+                    id="paidAmount"
+                    name="paidAmount"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={formData.paidAmount}
+                    onChange={handlePaidAmountChange}
+                    className="border-gray-300 focus-visible:ring-[#9c2d40]/30"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label className="font-medium">{t("invoices", "remaining", language)}</Label>
+                <div className="text-xl font-semibold text-amber-600">
+                  {formatCurrency(formData.totalTTC - formData.paidAmount)}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card className="border border-gray-200 shadow-sm hover:shadow transition-shadow duration-200">
+          <CardHeader className="flex flex-row items-center justify-between bg-gradient-to-r from-[#9c2d40]/10 to-transparent">
+            <CardTitle className="text-xl text-[#9c2d40] font-medium">{t("invoices", "items", language)}</CardTitle>
+            <Button type="button" onClick={handleAddItem} variant="outline" className="gap-1">
+              <Plus className="mr-2 h-4 w-4" />
+              {t("invoices", "add_item", language)}
+            </Button>
+          </CardHeader>
+          <CardContent className="p-0">
+            <Table className="w-full">
+              <TableHeader className="bg-gradient-to-r from-[#9c2d40]/10 to-transparent">
+                <TableRow>
+                  <TableHead className="text-[#9c2d40] font-medium w-[40%]">
+                    {t("invoices", "product_service", language)}
+                  </TableHead>
+                  <TableHead>{t("invoices", "quantity", language)}</TableHead>
+                  <TableHead>
+                    {t("invoices", "unit_price", language)} ({t("invoices", "dh", language)})
+                  </TableHead>
+                  <TableHead>
+                    {t("invoices", "total_ht", language)} ({t("invoices", "dh", language)})
+                  </TableHead>
+                  <TableHead className="text-right w-[80px]">{t("invoices", "actions", language)}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {formData.items.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-4 text-muted-foreground">
+                      {t("invoices", "no_items", language)}
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  formData.items.map((item, index) => (
+                    <TableRow key={item.id}>
+                      <TableCell>
+                        <Select
+                          value={item.productId}
+                          onValueChange={(value) => handleItemChange(index, "productId", value)}
+                        >
+                          <SelectTrigger className="border-gray-300 focus-visible:ring-[#9c2d40]/30">
+                            <SelectValue placeholder={t("invoices", "select_product", language)} />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {products.map((product) => (
+                              <SelectItem key={product.id} value={product.id}>
+                                {product.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </TableCell>
+                      <TableCell>
+                        <Input
+                          type="number"
+                          min="1"
+                          value={item.quantity}
+                          onChange={(e) => handleItemChange(index, "quantity", e.target.value)}
+                          className="border-gray-300 focus-visible:ring-[#9c2d40]/30"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Input
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          value={item.unitPrice}
+                          onChange={(e) => handleItemChange(index, "unitPrice", e.target.value)}
+                          className="border-gray-300 focus-visible:ring-[#9c2d40]/30"
+                        />
+                      </TableCell>
+                      <TableCell>{formatCurrency(item.totalHT)}</TableCell>
+                      <TableCell className="text-right">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleRemoveItem(index)}
+                          className="text-red-600 hover:bg-red-100"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          <span className="sr-only">{t("invoices", "delete", language)}</span>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </form>
+    </PageAnimation>
+  )
+}

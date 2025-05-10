@@ -1,0 +1,291 @@
+export const purchasesTranslations = {
+  fr: {
+    // List page
+    purchaseManagement: "Gestion des achats",
+    purchaseManagementDescription: "Créez et gérez vos bons de commande et suivez les livraisons fournisseurs.",
+    createPurchaseOrder: "Créer un bon de commande",
+    searchPurchaseOrder: "Rechercher un bon de commande...",
+    purchaseOrdersList: "Liste des bons de commande",
+    totalPurchaseOrders: "Total: {count} bons de commande",
+    number: "Numéro",
+    date: "Date",
+    supplier: "Fournisseur",
+    amount: "Montant",
+    status: "Statut",
+    actions: "Actions",
+    view: "Voir",
+    edit: "Modifier",
+    delete: "Supprimer",
+    back: "Retour",
+
+    // Statuses
+    draft: "Brouillon",
+    sent: "Envoyé",
+    received: "Reçu",
+    cancelled: "Annulé",
+
+    // Delete dialog
+    deletePurchaseOrder: "Supprimer le bon de commande",
+    deleteConfirmation: "Êtes-vous sûr de vouloir supprimer ce bon de commande ? Cette action est irréversible.",
+    purchaseOrderDeleted: "Bon de commande supprimé",
+    purchaseOrderDeletedDescription: 'Le bon de commande "{number}" a été supprimé avec succès.',
+
+    // Add purchase order page
+    createPurchaseOrderTitle: "Créer un bon de commande",
+    createPurchaseOrderDescription:
+      "Créez un nouveau bon de commande pour commander des produits auprès de vos fournisseurs.",
+    generalInfo: "Informations générales",
+    generalInfoDescription: "Entrez les détails du bon de commande.",
+    purchaseOrderNumber: "Numéro du bon de commande",
+    expectedDeliveryDate: "Date de livraison prévue",
+    paymentTerms: "Conditions de paiement",
+    paymentTermsPlaceholder: "Ex: 30 jours",
+    shippingMethod: "Méthode d'expédition",
+    shippingMethodPlaceholder: "Ex: Livraison standard",
+    notes: "Notes",
+    notesPlaceholder: "Notes ou informations supplémentaires",
+
+    // Items section
+    items: "Articles",
+    itemsDescription: "Ajoutez les articles à commander.",
+    product: "Produit",
+    selectProduct: "Sélectionner un produit",
+    quantity: "Quantité",
+    unitPrice: "Prix unitaire",
+    total: "Total",
+    addItem: "Ajouter l'article",
+    noItems: 'Aucun article ajouté. Cliquez sur "Ajouter un article" pour commencer.',
+
+    // Summary section
+    summary: "Résumé",
+    summaryDescription: "Détails du bon de commande",
+    orderNumber: "Numéro:",
+    orderDate: "Date:",
+    orderSupplier: "Fournisseur:",
+    itemCount: "Nombre d'articles:",
+    totalQuantity: "Quantité totale:",
+    totalAmount: "Total:",
+    cancel: "Annuler",
+    save: "Enregistrer",
+    saving: "Enregistrement...",
+    purchaseOrderCreated: "Bon de commande créé",
+    purchaseOrderCreatedDescription: 'Le bon de commande "{number}" a été créé avec succès.',
+
+    // Edit purchase order page
+    editPurchaseOrder: "Modifier un bon de commande",
+    editPurchaseOrderDescription: "Modifiez les informations du bon de commande.",
+    purchaseOrderInfo: "Informations du bon de commande",
+    purchaseOrderInfoDescription: "Modifiez les détails du bon de commande ci-dessous.",
+    addItemButton: "Ajouter un article",
+    purchaseOrderUpdated: "Bon de commande modifié",
+    purchaseOrderUpdatedDescription: 'Le bon de commande "{number}" a été modifié avec succès.',
+
+    // View purchase order page
+    purchaseOrderDetails: "Bon de commande {number}",
+    createdOn: "Créé le {date} | Statut: {status}",
+    information: "Informations",
+    changeStatus: "Statut",
+    statusUpdated: "Statut mis à jour",
+    statusUpdatedDescription: "Le statut du bon de commande a été mis à jour.",
+    purchaseOrderNotFound: "Bon de commande non trouvé",
+    purchaseOrderNotFoundDescription: "Le bon de commande demandé n'existe pas ou a été supprimé.",
+
+    // Error messages
+    error: "Erreur",
+    invalidProductError: "Veuillez sélectionner un produit et spécifier une quantité et un prix valides.",
+    selectSupplierError: "Veuillez sélectionner un fournisseur.",
+    noItemsError: "Veuillez ajouter au moins un article au bon de commande.",
+  },
+  en: {
+    // List page
+    purchaseManagement: "Purchase Management",
+    purchaseManagementDescription: "Create and manage your purchase orders and track supplier deliveries.",
+    createPurchaseOrder: "Create Purchase Order",
+    searchPurchaseOrder: "Search for a purchase order...",
+    purchaseOrdersList: "Purchase Orders List",
+    totalPurchaseOrders: "Total: {count} purchase orders",
+    number: "Number",
+    date: "Date",
+    supplier: "Supplier",
+    amount: "Amount",
+    status: "Status",
+    actions: "Actions",
+    view: "View",
+    edit: "Edit",
+    delete: "Delete",
+    back: "Back",
+
+    // Statuses
+    draft: "Draft",
+    sent: "Sent",
+    received: "Received",
+    cancelled: "Cancelled",
+
+    // Delete dialog
+    deletePurchaseOrder: "Delete Purchase Order",
+    deleteConfirmation: "Are you sure you want to delete this purchase order? This action cannot be undone.",
+    purchaseOrderDeleted: "Purchase Order Deleted",
+    purchaseOrderDeletedDescription: 'Purchase order "{number}" has been successfully deleted.',
+
+    // Add purchase order page
+    createPurchaseOrderTitle: "Create Purchase Order",
+    createPurchaseOrderDescription: "Create a new purchase order to order products from your suppliers.",
+    generalInfo: "General Information",
+    generalInfoDescription: "Enter the purchase order details.",
+    purchaseOrderNumber: "Purchase Order Number",
+    expectedDeliveryDate: "Expected Delivery Date",
+    paymentTerms: "Payment Terms",
+    paymentTermsPlaceholder: "Ex: 30 days",
+    shippingMethod: "Shipping Method",
+    shippingMethodPlaceholder: "Ex: Standard delivery",
+    notes: "Notes",
+    notesPlaceholder: "Notes or additional information",
+
+    // Items section
+    items: "Items",
+    itemsDescription: "Add items to order.",
+    product: "Product",
+    selectProduct: "Select a product",
+    quantity: "Quantity",
+    unitPrice: "Unit Price",
+    total: "Total",
+    addItem: "Add Item",
+    noItems: 'No items added. Click "Add Item" to start.',
+
+    // Summary section
+    summary: "Summary",
+    summaryDescription: "Purchase order details",
+    orderNumber: "Number:",
+    orderDate: "Date:",
+    orderSupplier: "Supplier:",
+    itemCount: "Item count:",
+    totalQuantity: "Total quantity:",
+    totalAmount: "Total:",
+    cancel: "Cancel",
+    save: "Save",
+    saving: "Saving...",
+    purchaseOrderCreated: "Purchase Order Created",
+    purchaseOrderCreatedDescription: 'Purchase order "{number}" has been successfully created.',
+
+    // Edit purchase order page
+    editPurchaseOrder: "Edit Purchase Order",
+    editPurchaseOrderDescription: "Modify purchase order information.",
+    purchaseOrderInfo: "Purchase Order Information",
+    purchaseOrderInfoDescription: "Modify the purchase order details below.",
+    addItemButton: "Add Item",
+    purchaseOrderUpdated: "Purchase Order Updated",
+    purchaseOrderUpdatedDescription: 'Purchase order "{number}" has been successfully updated.',
+
+    // View purchase order page
+    purchaseOrderDetails: "Purchase Order {number}",
+    createdOn: "Created on {date} | Status: {status}",
+    information: "Information",
+    changeStatus: "Status",
+    statusUpdated: "Status Updated",
+    statusUpdatedDescription: "The purchase order status has been updated.",
+    purchaseOrderNotFound: "Purchase Order Not Found",
+    purchaseOrderNotFoundDescription: "The requested purchase order does not exist or has been deleted.",
+
+    // Error messages
+    error: "Error",
+    invalidProductError: "Please select a product and specify a valid quantity and price.",
+    selectSupplierError: "Please select a supplier.",
+    noItemsError: "Please add at least one item to the purchase order.",
+  },
+  ar: {
+    // List page
+    purchaseManagement: "إدارة المشتريات",
+    purchaseManagementDescription: "إنشاء وإدارة أوامر الشراء وتتبع تسليمات الموردين.",
+    createPurchaseOrder: "إنشاء أمر شراء",
+    searchPurchaseOrder: "البحث عن أمر شراء...",
+    purchaseOrdersList: "قائمة أوامر الشراء",
+    totalPurchaseOrders: "المجموع: {count} أوامر شراء",
+    number: "الرقم",
+    date: "التاريخ",
+    supplier: "المورد",
+    amount: "المبلغ",
+    status: "الحالة",
+    actions: "الإجراءات",
+    view: "عرض",
+    edit: "تعديل",
+    delete: "حذف",
+    back: "رجوع",
+
+    // Statuses
+    draft: "مسودة",
+    sent: "مرسل",
+    received: "مستلم",
+    cancelled: "ملغي",
+
+    // Delete dialog
+    deletePurchaseOrder: "حذف أمر الشراء",
+    deleteConfirmation: "هل أنت متأكد من رغبتك في حذف أمر الشراء هذا؟ لا يمكن التراجع عن هذا الإجراء.",
+    purchaseOrderDeleted: "تم حذف أمر الشراء",
+    purchaseOrderDeletedDescription: 'تم حذف أمر الشراء "{number}" بنجاح.',
+
+    // Add purchase order page
+    createPurchaseOrderTitle: "إنشاء أمر شراء",
+    createPurchaseOrderDescription: "إنشاء أمر شراء جديد لطلب المنتجات من الموردين.",
+    generalInfo: "معلومات عامة",
+    generalInfoDescription: "أدخل تفاصيل أمر الشراء.",
+    purchaseOrderNumber: "رقم أمر الشراء",
+    expectedDeliveryDate: "تاريخ التسليم المتوقع",
+    paymentTerms: "شروط الدفع",
+    paymentTermsPlaceholder: "مثال: 30 يوم",
+    shippingMethod: "طريقة الشحن",
+    shippingMethodPlaceholder: "مثال: التسليم القياسي",
+    notes: "ملاحظات",
+    notesPlaceholder: "ملاحظات أو معلومات إضافية",
+
+    // Items section
+    items: "العناصر",
+    itemsDescription: "إضافة العناصر للطلب.",
+    product: "المنتج",
+    selectProduct: "اختر منتجًا",
+    quantity: "الكمية",
+    unitPrice: "سعر الوحدة",
+    total: "المجموع",
+    addItem: "إضافة عنصر",
+    noItems: 'لم تتم إضافة أي عناصر. انقر على "إضافة عنصر" للبدء.',
+
+    // Summary section
+    summary: "الملخص",
+    summaryDescription: "تفاصيل أمر الشراء",
+    orderNumber: "الرقم:",
+    orderDate: "التاريخ:",
+    orderSupplier: "المورد:",
+    itemCount: "عدد العناصر:",
+    totalQuantity: "إجمالي الكمية:",
+    totalAmount: "المجموع:",
+    cancel: "إلغاء",
+    save: "حفظ",
+    saving: "جاري الحفظ...",
+    purchaseOrderCreated: "تم إنشاء أمر الشراء",
+    purchaseOrderCreatedDescription: 'تم إنشاء أمر الشراء "{number}" بنجاح.',
+
+    // Edit purchase order page
+    editPurchaseOrder: "تعديل أمر الشراء",
+    editPurchaseOrderDescription: "تعديل معلومات أمر الشراء.",
+    purchaseOrderInfo: "معلومات أمر الشراء",
+    purchaseOrderInfoDescription: "تعديل تفاصيل أمر الشراء أدناه.",
+    addItemButton: "إضافة عنصر",
+    purchaseOrderUpdated: "تم تحديث أمر الشراء",
+    purchaseOrderUpdatedDescription: 'تم تحديث أمر الشراء "{number}" بنجاح.',
+
+    // View purchase order page
+    purchaseOrderDetails: "أمر الشراء {number}",
+    createdOn: "تم الإنشاء في {date} | الحالة: {status}",
+    information: "المعلومات",
+    changeStatus: "الحالة",
+    statusUpdated: "تم تحديث الحالة",
+    statusUpdatedDescription: "تم تحديث حالة أمر الشراء.",
+    purchaseOrderNotFound: "أمر الشراء غير موجود",
+    purchaseOrderNotFoundDescription: "أمر الشراء المطلوب غير موجود أو تم حذفه.",
+
+    // Error messages
+    error: "خطأ",
+    invalidProductError: "الرجاء اختيار منتج وتحديد كمية وسعر صالحين.",
+    selectSupplierError: "الرجاء اختيار مورد.",
+    noItemsError: "الرجاء إضافة عنصر واحد على الأقل إلى أمر الشراء.",
+  },
+}
